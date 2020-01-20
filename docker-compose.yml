@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  db:
+    image: "couchdb"
+    ports:
+    - target: 5984
+      published: 5984
+      protocol: tcp
+      mode: host
+  rest-api:
+    build:
+      context: ./springboot-adapter
+    environment:
+      - APP_PROFILE=development
+    image: "hexacore-rest-api:1.0"
+    ports:
+    - target: 8080
+      published: 8080
+      protocol: tcp
+      mode: host
+    depends_on:
+      - db

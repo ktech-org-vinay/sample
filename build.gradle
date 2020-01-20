@@ -1,0 +1,50 @@
+allprojects {
+	group = 'com.kobalt'
+	version = '1.0'
+	apply plugin: 'checkstyle'
+}
+
+subprojects {
+	apply plugin: 'java'
+	sourceCompatibility = 1.8
+
+	repositories {
+		mavenCentral()
+	}
+
+	sourceSets {
+		integration {
+			java {
+				srcDir "$projectDir/src/integration/java"
+				compileClasspath += main.output + test.output
+				runtimeClasspath += main.output + test.output
+			}
+			resources.srcDir "$projectDir/src/integration/resources"
+
+		}
+	}
+
+	configurations {
+		integrationImplementation.extendsFrom testImplementation
+		integrationRuntime.extendsFrom testRuntime
+	}
+
+	dependencies {
+		testCompile 'org.assertj:assertj-core:3.14.0'
+		compile 'org.jeasy:easy-random-core:4.1.0'
+		compile 'org.jeasy:easy-random-randomizers:4.1.0'
+		testCompile 'org.mockito:mockito-core:1.+'
+		testCompile 'org.junit.jupiter:junit-jupiter:5.4.1'
+		compileOnly 'org.projectlombok:lombok:1.18.10'
+		annotationProcessor 'org.projectlombok:lombok:1.18.10'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+	
+	task integrationTest(type: Test) {
+		testClassesDirs = sourceSets.integration.output.classesDirs
+		classpath = sourceSets.integration.runtimeClasspath
+	}
+}

@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.7.1"
+    }
+}
+
+plugins {
+    id 'com.avast.gradle.docker-compose' version "0.7.1"
+}
+
+apply plugin: 'docker-compose'
+composeBuild.enabled = false
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':core')
+    compile 'org.ektorp:org.ektorp:1.5.0'
+}
+
+dockerCompose {
+    testOnlyConfiguration {
+        startedServices = ['db']
+        isRequiredBy(project.tasks.getByName("integrationTest"))
+    }
+
+    buildBeforeUp = false
+}

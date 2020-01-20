@@ -1,0 +1,5 @@
+rootProject.name = 'hexacore'
+include 'core'
+include 'springboot-adapter'
+include 'couchdb-adapter'
+
